@@ -11,9 +11,12 @@ import csv
 
 # Low and behold, the almighty CanaData
 class CanaData:
+    
     def __init__(self):
         # Where the Magic happens
+
         self.baseUrl = 'https://api-g.weedmaps.com/discovery/v1/listings'
+        #self.baseUrl = 'https://api-g.weedmaps.com/wm/v1/listings'
         # Pagination & Page size
         self.pageSize = '&page_size=100&size=100'
         # Populated with the City/State Slug
@@ -25,7 +28,7 @@ class CanaData:
         # Number of Locations found for searchSlug
         self.locationsFound = 0
         # Set to true if troubleshooting
-        self.testMode = False
+        self.testMode = True
         # Number of Items found
         self.menuItemsFound = 0
         # Number returned from Weedmaps as to Max # of locations
@@ -46,12 +49,14 @@ class CanaData:
         self.NonGreenState = False
         # Sets whether or not we grab the slugs for the search
         self.slugGrab = False
+        self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
     # This function recieves a URL (string) and makes an HTTP request to it
     # If successul, converts the response to JSON and returns the dataset
     def do_request(self, url):
         # Make the request to the URL (no authentication)
-        req = requests.get(url)
+        
+        req = requests.get(url, headers=self.headers)
         # If status was success
         if req.status_code == 200:
             # Convert dataset to JSON
@@ -167,7 +172,7 @@ class CanaData:
                         print(f'Using url: {url}\n(for troubleshooting in browser)')
 
                     # Get the menu data from the URL
-                    menuData = requests.get(url)
+                    menuData = requests.get(url, headers=self.headers)
 
                     if menuData.status_code == 503:
                         print('First Byte error. Unsure of what this means but skipping for now! Please reach out in discord.')
